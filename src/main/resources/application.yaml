@@ -1,0 +1,28 @@
+# default
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          time_zone: UTC
+    show-sql: false
+    open-in-view: true
+  jackson:
+    time-zone: UTC
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER}
+app:
+  scheduling:
+    todo-items-status-update:
+      enabled: true
+      cron: "0 */30 * * * ?"     # every 30 minutes
+
+server:
+  port: 8080
+---
