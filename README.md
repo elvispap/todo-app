@@ -30,7 +30,8 @@ The REST API is documented in [`api/openapi.yaml`](api/openapi.yaml).
 
 - `GET /todos` — List todo items
     - Query params:
-        - `includeAll` (boolean, default: `false`) — if `true`, includes DONE and PAST_DUE items
+        - `status` (string, optional) — status filter; currently only `not done` is supported
+          - Example: `GET /todos?status=not%20done`
     - Responses: `200` (List of TodoItem)
 
 - `GET /todos/{id}` — Get a single todo item
@@ -180,4 +181,4 @@ Required environment variables:
 7. Using ShedLock for distributed scheduling in order to avoid multiple instances running the scheduled job
    simultaneously
 8. Adding an automated dependency update tool like Renovate [https://docs.renovatebot.com]
-9. Adding observability including alerting and monitoring 
+9. Adding observability including alerting and monitoring

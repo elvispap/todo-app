@@ -42,12 +42,13 @@ internal class TodoController(
 
     @GetMapping
     fun getAllTodoItems(
-        @RequestParam(name = "includeAll", defaultValue = "false") includeAll: Boolean
+        @RequestParam(name = "status", required = false) status: String?
     ): ResponseEntity<List<TodoItemRest>> {
-        val todoItems = if (includeAll) {
-            todoService.getAllTodoItems()
-        } else {
-            todoService.getAllNotDoneTodoItems()
+        val normalizedStatus = status?.trim()?.lowercase()
+        val todoItems = when (normalizedStatus) {
+            null -> todoService.getAllTodoItems()
+            "not done" -> todoService.getAllNotDoneTodoItems()
+            else -> throw BadRequestException("Unsupported status '$status'. Currently only 'not done' is supported.")
         }
 
         val response = todoItems.map { it.toTodoItemRest() }

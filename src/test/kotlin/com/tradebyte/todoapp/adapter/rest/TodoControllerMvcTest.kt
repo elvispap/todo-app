@@ -72,7 +72,30 @@ internal class TodoControllerMvcTest {
     inner class GetAllTodoItems {
 
         @Test
-        fun `should return all not done todoItems`() {
+        fun `should return all todoItems when no status is provided`() {
+            val items = listOf(
+                TodoItem(
+                    id = 1L,
+                    description = "A",
+                    status = TodoItem.Status.NOT_DONE,
+                    creationDateTime = Instant.parse("2026-01-13T08:00:00Z"),
+                    dueDateTime = Instant.parse("2026-01-20T15:30:00Z"),
+                    doneDateTime = null
+                )
+            )
+            every { todoService.getAllTodoItems() } returns items
+
+            mockMvc.perform(get("/api/todos").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk)
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].status").value("not done"))
+
+            verify(exactly = 1) { todoService.getAllTodoItems() }
+            verify(exactly = 0) { todoService.getAllNotDoneTodoItems() }
+        }
+
+        @Test
+        fun `should return all not done todoItems when status filter is provided`() {
             val items = listOf(
                 TodoItem(
                     id = 1L,
@@ -85,7 +108,11 @@ internal class TodoControllerMvcTest {
             )
             every { todoService.getAllNotDoneTodoItems() } returns items
 
-            mockMvc.perform(get("/api/todos").accept(MediaType.APPLICATION_JSON))
+            mockMvc.perform(
+                get("/api/todos")
+                    .queryParam("status", "not done")
+                    .accept(MediaType.APPLICATION_JSON)
+            )
                 .andExpect(status().isOk)
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].status").value("not done"))

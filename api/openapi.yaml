@@ -34,13 +34,13 @@ paths:
       operationId: listTodos
       tags: [ todos ]
       parameters:
-        - name: includeAll
+        - name: status
           in: query
-          description: If provided, include all todo items (including done and past due)
+          description: Optional status filter. Currently only 'not done' is supported.
           required: false
           schema:
-            type: boolean
-            default: false
+            type: string
+            enum: [ not done ]
       responses:
         '200':
           description: List of todo items
